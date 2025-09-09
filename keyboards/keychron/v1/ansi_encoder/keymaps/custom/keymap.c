@@ -118,3 +118,36 @@ bool dip_switch_update_user(uint8_t index, bool active) {
 }
 
 #endif
+
+enum combo_events {
+    FN_COMBO_LEFT,
+    FN_COMBO_RGHT
+};
+
+const uint16_t PROGMEM FN_COMBO_LEFT_KEYS[] = {MT_D, MT_F, COMBO_END};
+const uint16_t PROGMEM FN_COMBO_RGHT_KEYS[] = {MT_J, MT_K, COMBO_END};
+
+combo_t key_combos[] = {
+    [FN_COMBO_LEFT] = COMBO_ACTION(FN_COMBO_LEFT_KEYS),
+    [FN_COMBO_RGHT] = COMBO_ACTION(FN_COMBO_RGHT_KEYS)
+};
+
+void process_combo_event(uint16_t combo_index, bool pressed) {
+    switch (combo_index) {
+        case FN_COMBO_LEFT:
+        case FN_COMBO_RGHT:
+            if (pressed) {
+                uint32_t base_layer = get_highest_layer(default_layer_state);
+
+                if (base_layer == MAC_BASE || base_layer == MAC_CLEAN_BASE) {
+                    layer_on(MAC_FN);
+                } else if (base_layer == WIN_BASE || base_layer == WIN_CLEAN_BASE) {
+                    layer_on(WIN_FN);
+                }
+            } else {
+                layer_off(MAC_FN);
+                layer_off(WIN_FN);
+            }
+            break;
+    }
+}
