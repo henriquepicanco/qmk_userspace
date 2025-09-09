@@ -105,3 +105,16 @@ const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [WIN_FN]         = { ENCODER_CCW_CW(RM_VALD, RM_VALU)}
 };
 #endif // ENCODER_MAP_ENABLE
+
+#ifdef DIP_SWITCH_ENABLE
+
+bool dip_switch_update_user(uint8_t index, bool active) {
+    if (index == 0) {
+        default_layer_set(1UL << (active ? WIN_BASE : MAC_BASE));
+
+        return false;
+    }
+    return true;
+}
+
+#endif
